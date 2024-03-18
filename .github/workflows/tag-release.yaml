@@ -25,6 +25,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: check env
+        run: echo ${{ env.TIMESTAMP }}
+
       - name: Create tag
         run: |
           git config --global user.name "github-actions"
