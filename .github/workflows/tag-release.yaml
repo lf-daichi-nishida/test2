@@ -13,7 +13,6 @@ jobs:
   # create tag and draft release
   create_draft_release:
     runs-on: ubuntu-latest
-    needs: deploy_prd
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
