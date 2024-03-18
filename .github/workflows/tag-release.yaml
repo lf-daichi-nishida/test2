@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set timestamp
-        run: echo "TIMESTAMP=$(date +'%Y%m%d%H%M')" >> $GITHUB_ENV
+        run: echo "TIMESTAMP=$(date +'%Y%m%d%H%M')" >> "$GITHUB_ENV"
   
   # create tag
   create_tag:
@@ -27,10 +27,10 @@ jobs:
 
       - name: Create tag
         run: |
-          git config user.name "github-actions"
-          git config user.email "action@github.com"
-          git tag -a $TIMESTAMP -m "$TIMESTAMP"
-          git push origin $TIMESTAMP
+          git config --global user.name "github-actions"
+          git config --global user.email "action@github.com"
+          git tag -a ${{ env.TIMESTAMP }} -m "${{ env.TIMESTAMP }}"
+          git push origin ${{ env.TIMESTAMP }}
 
   # create release
   create_release_draft:
@@ -40,5 +40,5 @@ jobs:
       - name: Create Draft Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: $TIMESTAMP
+          tag_name: ${{ env.TIMESTAMP }}
           draft: true
