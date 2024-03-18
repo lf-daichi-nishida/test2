@@ -13,12 +13,9 @@ jobs:
   # create YYYYMMDDhhmm string for tag 
   get_timestamp:
     runs-on: ubuntu-latest
-    id: get_timestamp
     steps:
-      - name: Get timestamp
-        run: echo "$(date +'%Y%m%d%H%M')"
-
       - name: Set timestamp
+        id: get_timestamp
         run: echo "timestamp=$(date +'%Y%m%d%H%M')" >> "$GITHUB_OUTPUT"
   
   # create tag
