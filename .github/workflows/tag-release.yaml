@@ -30,8 +30,6 @@ jobs:
 
       - name: Create tag
         run: |
-          git config --local user.name "github-actions"
-          git config --local user.email "github-actions@users.noreply.github.com"
           git tag -a ${{ needs.get_timestamp.outputs.timestamp }} -m "${{ needs.get_timestamp.outputs.timestamp }}"
           git push origin ${{ needs.get_timestamp.outputs.timestamp }}
 
