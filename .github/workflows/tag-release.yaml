@@ -8,6 +8,7 @@ env:
 
 permissions:
   actions: write
+  contents: write
 
 jobs:
   # create YYYYMMDDhhmm string for tag 
