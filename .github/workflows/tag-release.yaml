@@ -21,8 +21,8 @@ jobs:
       # create tag and push
       - name: Create tag
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "action@github.com"
+          git config user.name "github-actions"
+          git config user.email "action@github.com"
           git tag -a $timestamp -m "$timestamp"
           git push origin $timestamp
 
