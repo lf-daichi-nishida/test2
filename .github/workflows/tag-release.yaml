@@ -27,11 +27,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Create tag
+        env:
+          timestamp: ${{ steps.get_timestamp.outputs.timestamp }}
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "action@github.com"
-          git tag -a ${{ steps.get_timestamp.outputs.timestamp }} -m "${{ steps.get_timestamp.outputs.timestamp }}"
-          git push origin ${{ steps.get_timestamp.outputs.timestamp }}
+          git tag -a $timestamp -m "$timestamp"
+          git push origin $timestamp
 
   # create release
   create_release_draft:
