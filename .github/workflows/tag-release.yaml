@@ -6,9 +6,6 @@ on:
 env:
   DEFAULT_BRANCH: main
 
-permissions:
-  contents: write
-
 jobs:
   # create tag and draft release
   create_draft_release:
