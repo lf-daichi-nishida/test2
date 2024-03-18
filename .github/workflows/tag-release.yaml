@@ -29,7 +29,7 @@ jobs:
   # create YYYYMMDDhhmm string for tag 
   get_timestamp:
     runs-on: ubuntu-latest
-    needs: set_git_identity
+    needs: check-branch
     outputs:
       timestamp: ${{ steps.set_timestamp.outputs.timestamp }}
     steps:
