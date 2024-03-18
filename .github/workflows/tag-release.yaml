@@ -13,12 +13,13 @@ jobs:
   # create YYYYMMDDhhmm string for tag 
   get_timestamp:
     runs-on: ubuntu-latest
+    id: get_timestamp
     steps:
       - name: Get timestamp
         run: echo "$(date +'%Y%m%d%H%M')"
 
       - name: Set timestamp
-        run: echo "TIMESTAMP=$(date +'%Y%m%d%H%M')" >> "$GITHUB_ENV"
+        run: echo "timestamp=$(date +'%Y%m%d%H%M')" >> "$GITHUB_OUTPUT"
   
   # create tag
   create_tag:
@@ -28,15 +29,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: check env
-        run: echo "$TIMESTAMP"
-
       - name: Create tag
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "action@github.com"
-          git tag -a $TIMESTAMP -m "$TIMESTAMP"
-          git push origin $TIMESTAMP
+          git tag -a ${{ steps.get_timestamp.outputs.timestamp }} -m "${{ steps.get_timestamp.outputs.timestamp }}"
+          git push origin ${{ steps.get_timestamp.outputs.timestamp }}
 
   # create release
   create_release_draft:
@@ -46,5 +44,5 @@ jobs:
       - name: Create Draft Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: $TIMESTAMP
+          tag_name: ${{ steps.get_timestamp.outputs.timestamp }}
           draft: true
