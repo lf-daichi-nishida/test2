@@ -32,8 +32,8 @@ jobs:
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "action@github.com"
-          git tag -a ${{ env.TIMESTAMP }} -m "${{ env.TIMESTAMP }}"
-          git push origin ${{ env.TIMESTAMP }}
+          git tag -a $TIMESTAMP -m "$TIMESTAMP"
+          git push origin $TIMESTAMP
 
   # create release
   create_release_draft:
@@ -43,5 +43,5 @@ jobs:
       - name: Create Draft Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ env.TIMESTAMP }}
+          tag_name: $TIMESTAMP
           draft: true
