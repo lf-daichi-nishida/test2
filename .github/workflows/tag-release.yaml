@@ -13,8 +13,10 @@ jobs:
   # create YYYYMMDDhhmm string for tag 
   get_timestamp:
     runs-on: ubuntu-latest
+    outputs:
+      timestamp: ${{ steps.get_timestamp.outputs.timestamp }}
     steps:
-      - name: Set timestamp
+      - name: Get timestamp
         id: get_timestamp
         run: echo "timestamp=$(date +'%Y%m%d%H%M')" >> "$GITHUB_OUTPUT"
   
@@ -30,16 +32,16 @@ jobs:
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "action@github.com"
-          git tag -a ${{ steps.get_timestamp.outputs.timestamp }} -m "${{ steps.get_timestamp.outputs.timestamp }}"
-          git push origin ${{ steps.get_timestamp.outputs.timestamp }}
+          git tag -a ${{ needs.get_timestamp.outputs.timestamp }} -m "${{ needs.get_timestamp.outputs.timestamp }}"
+          git push origin ${{ needs.get_timestamp.outputs.timestamp }}
 
   # create release
   create_release_draft:
     runs-on: ubuntu-latest
-    needs: create_tag
+    needs: [create_tag, get_timestamp]
     steps:
       - name: Create Draft Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.get_timestamp.outputs.timestamp }}
+          tag_name: ${{ needs.get_timestamp.outputs.timestamp }}
           draft: true
