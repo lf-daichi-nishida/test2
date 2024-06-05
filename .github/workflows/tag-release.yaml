@@ -7,6 +7,24 @@ env:
   DEFAULT_BRANCH: main
 
 jobs:
+  # This job is added because `workflow_dispatch` does not allow to validate input in advance.
+  # Also, this job can be extracted to an action under the `.github/actions/` directory if other workflows require.
+  check-branch:
+    runs-on: ubuntu-latest
+    outputs:
+      branch-is-default: ${{ env.is_default_branch }}
+
+    # Check if the branch is $DEFAULT_BRANCH. A bit fuzzy because ref_type is not checked.
+    steps:
+      - name: show message in case the branch is not $DEFAULT_BRANCH
+        if: ${{ github.ref_name != env.DEFAULT_BRANCH }}
+        run: echo "The branch is not '${DEFAULT_BRANCH}'."
+      - name: set a context to pass to another job
+        if: ${{ github.ref_name == env.DEFAULT_BRANCH }}
+        run: |
+          echo "The branch is '${DEFAULT_BRANCH}'.";
+          echo "is_default_branch=true" >> $GITHUB_ENV
+
   # create tag and draft release
   create_draft_release:
     runs-on: ubuntu-latest
