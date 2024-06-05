@@ -13,22 +13,41 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       branch-is-default: ${{ env.is_default_branch }}
+      is-tag: ${{ env.is_tag }}
 
     # Check if the branch is $DEFAULT_BRANCH. A bit fuzzy because ref_type is not checked.
     steps:
       - name: show message in case the branch is not $DEFAULT_BRANCH
         if: ${{ github.ref_name != env.DEFAULT_BRANCH }}
-        run: echo "The branch is not '${DEFAULT_BRANCH}'."
+        run: echo "The branch is not '${DEFAULT_BRANCH}'"
       - name: set a context to pass to another job
         if: ${{ github.ref_name == env.DEFAULT_BRANCH }}
         run: |
           echo "The branch is '${DEFAULT_BRANCH}'.";
           echo "is_default_branch=true" >> $GITHUB_ENV
+      - name: show message in case this is not a tag
+        if: ${{ github.ref_type != 'tag' }}
+        run: echo "This is not a tag"
+      - name: check if this is a tag
+        if: ${{ github.ref_type == 'tag' }}
+        run: echo "is_tag=true" >> $GITHUB_ENV
 
-  # create tag and draft release
-  create_draft_release:
+  # release job(mock)
+  release:
     runs-on: ubuntu-latest
     needs: check-branch
+    if: needs.check-branch.outputs.is-tag || needs.check-branch.outputs.branch-is-default
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: show message
+        run: echo "Releasing(not really)"
+
+
+  # create tag and draft release(only on default branch)
+  create_draft_release:
+    runs-on: ubuntu-latest
+    needs: release
     if: needs.check-branch.outputs.branch-is-default
     steps:
       - name: Checkout code
